@@ -1,0 +1,57 @@
+msgid ""
+msgstr "Project-Id-Version: tygh"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language-Team: Russian\n"
+"Language: ru_RU"
+
+msgctxt "Addons::name::ee_ext_price"
+msgid "ee_ext_price_name"
+msgstr "[efimchenko.ru] Расширение модуля прайсов"
+
+msgctxt "Addons::description::ee_ext_price"
+msgid "ee_ext_price_description"
+msgstr "Расширяет возможности штатного модуля Прайс-листы."
+
+msgctxt "SettingsSections::ee_ext_price::general"
+msgid "ee_ext_price_general"
+msgstr "Общее"
+
+msgctxt "SettingsSections::ee_ext_price::fields"
+msgid "ee_ext_price_fields"
+msgstr "Сопоставление полей"
+
+msgctxt "SettingsOptions::ee_ext_price::ee_ext_price_active"
+msgid "ee_ext_price_active"
+msgstr "Активировать проценку"
+
+msgctxt "SettingsTooltips::ee_ext_price::ee_ext_price_active"
+msgid "ee_ext_price_active_tooltips"
+msgstr "Добавит поле для ввода проценки в настройки прайса"
+
+msgctxt "SettingsOptions::ee_ext_price::sorting_products"
+msgid "ee_sorting_products"
+msgstr "Сортировка в файле CSV по названию продукта"
+
+msgctxt "SettingsOptions::ee_ext_price::add_all_images"
+msgid "ee_add_all_images"
+msgstr "Выгружать все картинки товара"
+
+msgctxt "SettingsOptions::ee_ext_price::separator_images"
+msgid "ee_separator_images"
+msgstr "Разделитель адреса картинок в CSV"
+
+msgctxt "SettingsOptions::ee_ext_price::article"
+msgid "ee_article"
+msgstr "Название поля с кодом товара в CSV"
+
+msgctxt "SettingsOptions::ee_ext_price::images"
+msgid "ee_images"
+msgstr "Название поля с картинками в CSV"
+
+msgctxt "SettingsOptions::ee_ext_price::price"
+msgid "ee_price"
+msgstr "Название поля с ценой в CSV"
+
+msgctxt "Languages::ee_ext_price.persile"
+msgid "ee_ext_price.persile"
+msgstr "Проценка прайса"

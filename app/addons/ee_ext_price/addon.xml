@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<addon scheme="3.0">
+    <id>ee_ext_price</id>
+    <version>1.0.0</version>
+    <status>active</status>
+    <auto_install>MULTIVENDOR,ULTIMATE</auto_install>
+    <default_language>ru</default_language>
+	<compatibility>
+		<dependencies>data_feeds</dependencies>
+	</compatibility>
+    <has_icon>Y</has_icon>
+    <supplier>efimchenko.ru</supplier>
+    <supplier_link>https://efimchenko.ru</supplier_link>
+
+    <settings layout="separate" edition_type="ROOT,VENDOR,STOREFRONT">
+        <sections>
+            <section id="general">
+                <items>
+                    <item id="ee_ext_price_active">                      
+                        <type>checkbox</type>
+						<default_value>Y</default_value>
+                    </item>
+                    <item id="sorting_products">                      
+                        <type>checkbox</type>
+						<default_value>Y</default_value>					
+                    </item>
+                    <item id="add_all_images">                      
+                        <type>checkbox</type>
+						<default_value>Y</default_value>					
+                    </item>
+                    <item id="separator_images">                      
+                        <type>input</type>
+						<default_value>,</default_value>					
+                    </item>
+                </items>
+            </section>		
+			<section id="fields">
+				<items>
+                    <item id="article">                      
+                        <type>input</type>
+						<default_value>Артикул</default_value>					
+                    </item>
+                    <item id="images">                      
+                        <type>input</type>
+						<default_value>Изображение</default_value>					
+                    </item>
+                    <item id="price">                      
+                        <type>input</type>
+						<default_value>Цена</default_value>					
+                    </item>
+				</items>
+			</section>
+        </sections>
+    </settings>
+
+    <functions>
+        <item for="install">fn_ee_ext_price_install</item>
+        <item for="uninstall">fn_ee_ext_price_uninstall</item>
+    </functions>
+</addon>
