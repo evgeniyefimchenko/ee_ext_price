@@ -9,6 +9,26 @@ function fn_ee_ext_price_install() {
 	$ee_persile = db_get_field('SELECT 379 FROM INFORMATION_SCHEMA.COLUMNS WHERE `table_name` = "?:data_feeds" AND `table_schema` = "' . $db_name . '" AND `column_name` = "ee_persile"'); 	
 	if (!$ee_persile) {
 		db_query('ALTER TABLE `?:data_feeds` ADD `ee_persile` varchar(255) NULL DEFAULT NULL');	
+	}
+	$ee_add_opt1 = false;
+	$ee_add_opt1 = db_get_field('SELECT 379 FROM INFORMATION_SCHEMA.COLUMNS WHERE `table_name` = "?:data_feeds" AND `table_schema` = "' . $db_name . '" AND `column_name` = "ee_add_opt1"'); 	
+	if (!$ee_add_opt1) {
+		db_query('ALTER TABLE `?:data_feeds` ADD `ee_add_opt1` varchar(255) NULL DEFAULT NULL');	
+	}
+	$ee_add_opt2 = false;
+	$ee_add_opt2 = db_get_field('SELECT 379 FROM INFORMATION_SCHEMA.COLUMNS WHERE `table_name` = "?:data_feeds" AND `table_schema` = "' . $db_name . '" AND `column_name` = "ee_add_opt2"'); 	
+	if (!$ee_add_opt2) {
+		db_query('ALTER TABLE `?:data_feeds` ADD `ee_add_opt2` varchar(255) NULL DEFAULT NULL');	
+	}
+	$ee_add_opt1_text = false;
+	$ee_add_opt1_text = db_get_field('SELECT 379 FROM INFORMATION_SCHEMA.COLUMNS WHERE `table_name` = "?:data_feeds" AND `table_schema` = "' . $db_name . '" AND `column_name` = "ee_add_opt1_text"'); 	
+	if (!$ee_add_opt1_text) {
+		db_query('ALTER TABLE `?:data_feeds` ADD `ee_add_opt1_text` varchar(255) NULL DEFAULT NULL');	
+	}
+	$ee_add_opt2_text = false;
+	$ee_add_opt2_text = db_get_field('SELECT 379 FROM INFORMATION_SCHEMA.COLUMNS WHERE `table_name` = "?:data_feeds" AND `table_schema` = "' . $db_name . '" AND `column_name` = "ee_add_opt2_text"'); 	
+	if (!$ee_add_opt2_text) {
+		db_query('ALTER TABLE `?:data_feeds` ADD `ee_add_opt2_text` varchar(255) NULL DEFAULT NULL');	
 	}	
 	// Установим доп. хук ee_encode_file_price в app/addons/data_feeds/func.php
 	// Строка 329
@@ -86,26 +106,55 @@ function fn_ee_ext_price_ee_encode_file_price($datafeed_data) {
 		foreach($csv as $key => $item) {
 			$temp = explode(';', $item[0]);
 			if ($count) {
-				$str = '';				
-				if ($conf_addon['add_all_images'] == 'Y') {					
+				$str = '';
+				// Дополнительные поля оптовые скидки
+				if (trim(mb_strlen($datafeed_data['ee_add_opt2_text'])) > 0 && trim(mb_strlen($datafeed_data['ee_add_opt2'])) > 0 && $index_price !== false) { // второе опт. поле
+					array_splice($temp, $index_price + 1, 0, fn_ee_ext_price_calc_price($datafeed_data['ee_add_opt2'], $temp[$index_price]));
+				}
+				
+				if (trim(mb_strlen($datafeed_data['ee_add_opt1_text'])) > 0 && trim(mb_strlen($datafeed_data['ee_add_opt1'])) > 0 && $index_price !== false) { // первое опт. поле
+					array_splice($temp, $index_price + 1, 0, fn_ee_ext_price_calc_price($datafeed_data['ee_add_opt1'], $temp[$index_price]));
+				}				
+				if ($conf_addon['add_all_images'] == 'Y' && $index_images !== false && $index_product_code !== false) {					
 					$product_id = db_get_field('SELECT product_id FROM ?:products WHERE product_code LIKE ?s', $temp[$index_product_code]);					
 					$images_ids = db_get_array('SELECT detailed_id FROM ?:images_links WHERE object_id = ?i AND object_type = ?s', $product_id, 'product');		
 					if ($images_ids) {
 						foreach($images_ids as $detailed_id) {
 							$str .= fn_get_image($detailed_id['detailed_id'], 'product')['https_image_path'] . $conf_addon['separator_images'];
 						}						
-						$temp[$index_images] = $str;						
+						$temp[$index_images] = mb_substr($str, 0, -1);						
 					}					
 				}
-				if ($conf_addon['ee_ext_price_active'] == 'Y' && trim(mb_strlen($datafeed_data['ee_persile'])) > 0) {					
+				if ($conf_addon['ee_ext_price_active'] == 'Y' && trim(mb_strlen($datafeed_data['ee_persile'])) > 0 && $index_price !== false) {					
 					$new_price = fn_ee_ext_price_calc_price($datafeed_data['ee_persile'], $temp[$index_price]);
 					$temp[$index_price] = $new_price;
-				}
+				}				
 				$csv[$key][0] = implode(';', $temp);				
 			} else {
-				$index_product_code = array_search($conf_addon['article'], $temp);
-				$index_images = array_search($conf_addon['images'], $temp);
-				$index_price = array_search($conf_addon['price'], $temp);
+				$temp_lowercase = array_map('mb_strtolower', $temp);
+				$index_price = array_search(mb_strtolower($conf_addon['price']), $temp_lowercase);
+				if ($index_price === false && trim(mb_strlen($conf_addon['price'])) > 0) {
+					fn_set_notification('E', 'ee_ext_price error: ', 'Поле ' . $conf_addon['price'] . ' не найдено в CSV файле!');
+				}
+				// Дополнительные поля оптовые скидки
+				if (trim(mb_strlen($datafeed_data['ee_add_opt2_text'])) > 0 && trim(mb_strlen($datafeed_data['ee_add_opt2'])) > 0 && $index_price !== false) { // второе опт. поле
+					array_splice($temp, $index_price + 1, 0, $datafeed_data['ee_add_opt2_text']);
+				}
+				
+				if (trim(mb_strlen($datafeed_data['ee_add_opt1_text'])) > 0 && trim(mb_strlen($datafeed_data['ee_add_opt1'])) > 0 && $index_price !== false) { // первое опт. поле
+					array_splice($temp, $index_price + 1, 0, $datafeed_data['ee_add_opt1_text']);
+				}				
+				$temp_lowercase = array_map('mb_strtolower', $temp);				
+
+				$index_product_code = array_search(mb_strtolower($conf_addon['article']), $temp_lowercase);
+				if ($index_product_code === false && trim(mb_strlen($conf_addon['article'])) > 0) {
+					fn_set_notification('E', 'ee_ext_price error: ', 'Поле ' . $conf_addon['article'] . ' не найдено в CSV файле!');
+				}
+				$index_images = array_search(mb_strtolower($conf_addon['images']), $temp_lowercase);
+				if ($index_images === false && trim(mb_strlen($conf_addon['images'])) > 0) {
+					fn_set_notification('E', 'ee_ext_price error: ', 'Поле ' . $conf_addon['images'] . ' не найдено в CSV файле!');
+				}
+				$csv[$key][0] = implode(';', $temp);				
 			}
 			$count = 1;
 		}
@@ -126,5 +175,5 @@ function fn_ee_ext_price_calc_price($ee_persile, $old_price) {
 	} else {
 		$new_price = $old_price + $ee_persile;
 	}
-	return $new_price;
+	return round($new_price, 2);
 }

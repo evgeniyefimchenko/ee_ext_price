@@ -55,3 +55,23 @@ msgstr "Название поля с ценой в CSV"
 msgctxt "Languages::ee_ext_price.persile"
 msgid "ee_ext_price.persile"
 msgstr "Проценка прайса"
+
+msgctxt "Languages::ee_ext_price_ee_add_opt1_text"
+msgid "ee_ext_price_ee_add_opt1_text"
+msgstr "Имя поля доп. цена №1"
+
+msgctxt "Languages::ee_ext_price_ee_add_opt1"
+msgid "ee_ext_price_ee_add_opt1"
+msgstr "Значение дня доп. цены №1"
+
+msgctxt "Languages::ee_ext_price_ee_add_opt2_text"
+msgid "ee_ext_price_ee_add_opt2_text"
+msgstr "Имя поля доп. цена №2"
+
+msgctxt "Languages::ee_ext_price_ee_add_opt2"
+msgid "ee_ext_price_ee_add_opt2"
+msgstr "Значение дня доп. цены №2"
+
+msgctxt "Languages::ee_ext_price_persile"
+msgid "ee_ext_price_persile"
+msgstr "Проценка основной цены"
