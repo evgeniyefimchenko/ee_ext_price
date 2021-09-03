@@ -31,10 +31,10 @@ function fn_ee_ext_price_install() {
 		db_query('ALTER TABLE `?:data_feeds` ADD `ee_add_opt2_text` varchar(255) NULL DEFAULT NULL');	
 	}	
 	// Установим доп. хук ee_encode_file_price в app/addons/data_feeds/func.php
-	// Строка 329
+	// Строка 265
 	$path = 'app/addons/data_feeds/func.php';
-	$oldstr = 'fn_set_notification(NotificationSeverity::NOTICE, __(\'notice\'), __(\'text_exim_data_exported\'));';
-	$newstr = 'fn_set_notification(NotificationSeverity::NOTICE, __(\'notice\'), __(\'text_exim_data_exported\')); fn_set_hook(\'ee_encode_file_price\', $datafeed_data);';
+	$oldstr = 'if (fn_export($pattern, $fields, $options)) {';
+	$newstr = 'if (fn_export($pattern, $fields, $options)) { fn_set_hook(\'ee_encode_file_price\', $datafeed_data);';
 	$file = file($path);
 	if (is_array($file) && !fn_ee_ext_price_check_hook()) { 
 		$file = str_replace($oldstr, $newstr, $file);
@@ -78,8 +78,8 @@ function fn_ee_ext_price_check_hook() {
 function fn_ee_ext_price_uninstall() {
 	if (fn_ee_ext_price_check_hook()) {
 		$path = 'app/addons/data_feeds/func.php';
-		$str = 'fn_set_notification(NotificationSeverity::NOTICE, __(\'notice\'), __(\'text_exim_data_exported\')); fn_set_hook(\'ee_encode_file_price\', $datafeed_data);';
-		$newstr = 'fn_set_notification(NotificationSeverity::NOTICE, __(\'notice\'), __(\'text_exim_data_exported\'));';
+		$str = 'if (fn_export($pattern, $fields, $options)) { fn_set_hook(\'ee_encode_file_price\', $datafeed_data);';
+		$newstr = 'if (fn_export($pattern, $fields, $options)) {';
 		$file = str_replace($str, $newstr, file($path));
 		$fp = fopen($path, 'w+');
 		fwrite($fp, implode('', $file)); 
