@@ -116,11 +116,11 @@ function fn_ee_ext_price_ee_encode_file_price($datafeed_data) {
 					array_splice($temp, $index_price + 1, 0, fn_ee_ext_price_calc_price($datafeed_data['ee_add_opt1'], $temp[$index_price]));
 				}				
 				if ($conf_addon['add_all_images'] == 'Y' && $index_images !== false && $index_product_code !== false) {					
-					$product_id = db_get_field('SELECT product_id FROM ?:products WHERE product_code LIKE ?s', $temp[$index_product_code]);					
-					$images_ids = db_get_array('SELECT detailed_id FROM ?:images_links WHERE object_id = ?i AND object_type = ?s', $product_id, 'product');		
-					if ($images_ids) {
-						foreach($images_ids as $detailed_id) {
-							$str .= fn_get_image($detailed_id['detailed_id'], 'product')['https_image_path'] . $conf_addon['separator_images'];
+					$product_id = db_get_field('SELECT product_id FROM ?:products WHERE product_code LIKE ?s', $temp[$index_product_code]);
+					$product_data = fn_get_product_data($product_id, fn_fill_auth());		
+					if (count($product_data['image_pairs']) > 0) {
+						foreach($product_data['image_pairs'] as $pair) {
+							$str .= $pair['detailed']['https_image_path'] . $conf_addon['separator_images'];
 						}						
 						$temp[$index_images] = mb_substr($str, 0, -1);						
 					}					
