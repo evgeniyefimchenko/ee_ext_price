@@ -117,8 +117,12 @@ function fn_ee_ext_price_ee_encode_file_price($datafeed_data) {
 				}				
 				if ($conf_addon['add_all_images'] == 'Y' && $index_images !== false && $index_product_code !== false) {					
 					$product_id = db_get_field('SELECT product_id FROM ?:products WHERE product_code LIKE ?s', $temp[$index_product_code]);
-					$product_data = fn_get_product_data($product_id, fn_fill_auth());		
+					$product_data = fn_get_product_data($product_id, fn_fill_auth());
+				
 					if (count($product_data['image_pairs']) > 0) {
+						if (isset($product_data['main_pair'])) {
+							$str .= $product_data['main_pair']['detailed']['https_image_path'] . $conf_addon['separator_images'];	
+						}											
 						foreach($product_data['image_pairs'] as $pair) {
 							$str .= $pair['detailed']['https_image_path'] . $conf_addon['separator_images'];
 						}						
